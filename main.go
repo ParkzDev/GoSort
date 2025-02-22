@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"strconv"
@@ -55,7 +54,7 @@ func ExitProgram(message string) {
 	fmt.Println("\t\tBy - Yosimar Zahid Aquino Sosa")
 	fmt.Println("==================================================================")
 	fmt.Println("\tPresiona Enter para finalizar el programa...")
-	bufio.NewReader(os.Stdin).ReadByte()
+	fmt.Scanln()
 }
 
 func FileMove(directory string, monthNames map[string]string) {
