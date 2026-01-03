@@ -9,19 +9,19 @@ import (
 )
 
 func main() {
-	monthNames := map[string]string{
-		"1":  "ENERO",
-		"2":  "FEBRERO",
-		"3":  "MARZO",
-		"4":  "ABRIL",
-		"5":  "MAYO",
-		"6":  "JUNIO",
-		"7":  "JULIO",
-		"8":  "AGOSTO",
-		"9":  "SEPTIEMBRE",
-		"10": "OCTUBRE",
-		"11": "NOVIEMBRE",
-		"12": "DICIEMBRE",
+	monthNames := map[int]string{
+		1:  "ENERO",
+		2:  "FEBRERO",
+		3:  "MARZO",
+		4:  "ABRIL",
+		5:  "MAYO",
+		6:  "JUNIO",
+		7:  "JULIO",
+		8:  "AGOSTO",
+		9:  "SEPTIEMBRE",
+		10: "OCTUBRE",
+		11: "NOVIEMBRE",
+		12: "DICIEMBRE",
 	}
 	start := time.Now()
 	Banner()
@@ -57,14 +57,18 @@ func ExitProgram(message string) {
 	fmt.Scanln()
 }
 
-func FileMove(directory string, monthNames map[string]string) {
+func FileMove(directory string, monthNames map[int]string) {
 	dirRead, _ := os.Open(directory)
 	dirFiles, _ := dirRead.Readdir(0)
 	for fileIndex := range dirFiles {
+		currentDate := time.Now()
+		currentYear := currentDate.Year()
 		currentFile := dirFiles[fileIndex]
-		destiny := directory + strconv.Itoa(currentFile.ModTime().Year()) + string(os.PathSeparator) + monthNames[currentFile.ModTime().Month().String()] + string(os.PathSeparator) + strings.Split(currentFile.Name(), ".")[0] + string(os.PathSeparator)
-		os.MkdirAll(destiny, 0755)
-		os.Rename(directory+currentFile.Name(), destiny+currentFile.Name())
+		if !currentFile.IsDir() && currentFile.ModTime().Year() < currentYear {
+			destiny := directory + strconv.Itoa(currentFile.ModTime().Year()) + string(os.PathSeparator) + monthNames[int(currentFile.ModTime().Month())] + string(os.PathSeparator) + strings.Split(currentFile.Name(), ".")[0] + string(os.PathSeparator)
+			os.MkdirAll(destiny, 0755)
+			os.Rename(directory+currentFile.Name(), destiny+currentFile.Name())
+		}
 	}
 }
 
